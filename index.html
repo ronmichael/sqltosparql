@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>SQL To SPARQL Reference</title>
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <meta name="author" content="Ron Michael Zettlemoyer">
+        <meta name="description" content="A side-by-side cross-reference that shows the corresponding SPARQL statement for common SQL statements">
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:creator" content="@ronmichael">
+        <meta name="twitter:site" content="@fynydd">
+        <meta name="twitter:description" content="A side-by-side cross-reference that shows the corresponding SPARQL statement for common SQL statements">
+        <meta name="twitter:title" content="SQL to SPARQL Reference">
+
+        <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <script src="/js/modernizr-2.6.2.min.js"></script>
+        <script src="//use.edgefonts.net/merriweather.js"></script>
+        <script src="//use.edgefonts.net/source-sans-pro.js"></script>
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div class=frame>
+            <h1>SQL to SPARQL Reference</h1>
+
+            <br>
+
+            <p>
+                So you're learning RDF and SPARQL.
+                And you probably know a bit of SQL, right?
+                If some side-by-side examples of SQL translated to SPARQL might be of help
+                then you've come to the right place!
+                If not, maybe you are looking for the <a href="http://www.w3.org/TR/rdf-sparql-query/">W3C's SPARQL documentation</a>?
+            </p>
+
+            <br>
+            <br>
+
+
+            <table class=examples>
+
+                <tr>
+                    <td colspan=2 class=describe>
+                        Let's say we have a database of places.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class='code well'>
+                            Country
+                            <br>
+                            <blockquote>
+                                <table class=table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>United States of America</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </blockquote>
+                            State
+                            <br>
+                            <blockquote>
+                                <table class=table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>CountryID</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>Pennsylvania</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </blockquote>
+                            City
+                            <br>
+                            <blockquote>
+                                <table class=table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>StateID</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>Philadelphia</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </blockquote>
+
+                            <br>
+                           
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class='code well'>
+                            @prefix : &lt;http://sqltosparl.info/mydb#&gt;
+                            <br>
+                            @prefix places: <a href="http://vocab.org/places/schema.html">&lt;http://purl.org/ontology/places#&gt;</a>
+                            <br>
+                            @prefix rdfs: <a href="http://www.w3.org/TR/rdf-schema/">&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</a>
+                            <br>
+
+                            <br>
+                            {
+                            <br>
+                            <blockquote>:usa a places:Country.
+                                <br>
+                                :usa rdfs:label "United States of America."
+                                <br>
+                                <br>
+                                :pennsylvania a places:State.
+                                <br>
+                                :pennslyvania places:in :usa.
+                                <br>
+                                :pennsylvania rdfs:label "Pennslyvania".
+                                <br>
+                                <br>
+                                :philadelphia a places:City.
+                                <br>
+                                :philadelphia places:in :pennsylvania
+                                <br>
+                                :philadelphia rdfs:label "Philadelphia".
+
+                                <br>
+                            </blockquote>
+                            }
+                            <br>
+                            <br>
+                            <br>
+                        </div>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td colspan=2 class=describe>
+                        Let's see all the data in a human-friendly view.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class='code well'>
+                            select
+                            <br>
+                            <blockquote>country.name as countryName,
+                                <br>
+                                state.name as stateName,
+                                <br>
+                                city.name as cityName
+                            </blockquote>
+                            from country
+                            <br>
+                            join state on state.countryid = country.id
+                            <br>
+                            join city on city.stateid = state.id
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                               <br>
+                         <br>
+                            <br>
+                        </div>
+                    </td>
+                    <td>
+                        <div class='code well'>
+                            select
+                            <br>
+                            <blockquote>?countryName
+                                <br>
+                                ?stateName
+                                <br>
+                                ?cityName
+                            </blockquote>
+                            where {
+                            <br>
+                            <blockquote>?country a places:Country.
+                                <br>
+                                ?state a places:State.
+                                <br>
+                                ?city a places:City.
+                                <br>
+                                ?state places:in ?country.
+                                <br>
+                                ?city places:in ?state.
+                                <br>
+                                ?country rdfs:label ?countryName.
+                                <br>
+                                ?state rdfs:label ?stateName.
+                                <br>
+                                ?city rdfs:label ?cityName.
+                            </blockquote>
+                            }
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td colspan=2 class=describe>
+                        Show me the name of any country, city or state that contains the the word 'new'.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class='code well'>
+                            select name from country where name like '%new%';
+                            <br>
+                            select name from state where name like '%new%';
+                            <br>
+                            select name from city where name like '%new%';
+                            <br>
+                            <br>
+                        </div>
+                    </td>
+                    <td>
+                        <div class='code well'>
+                            select ?name where { 
+                            <blockquote>?entity rdfs:label ?name.
+                                <br>FILTER regex(?name, "new")
+                            </blockquote>}
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td colspan=2 class=describe>
+                        Show me the number of cities in each state in the United States.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class='code well'>
+                            <br>
+                            <br>
+                            <br>
+                            select
+                            <br>
+                            <blockquote>state.name,
+                                <br>
+                                count(city.id) cities
+                            </blockquote>
+                            <br>
+                            from country
+                            <br>
+                            join state on state.countryid = country.id
+                            <br>
+                            join city on city.countryid = state.id
+                            <br>
+                            <br>
+                            where country.name = 'United States of America'
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            group by state.name
+                            <br>
+                            order by state.name, count(city.id) desc
+                            <br>
+                            limit 10
+                        </div>
+                    </td>
+                    <td>
+                        <div class='code well'>
+                            prefix places: <a href="http://vocab.org/places/schema.html">&lt;http://purl.org/ontology/places#&gt;</a>
+                            <br>
+                            prefix rdfs: <a href="http://www.w3.org/TR/rdf-schema/">&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</a>
+                            <br>
+                            <br>
+
+                            select
+                            <br>
+                            <blockquote>?stateName
+                                <br>
+                                ( count(?city) as ?cities )
+                            </blockquote>
+                            <br>
+                            where { 
+                            <br>
+                            <blockquote>?country rdfs:label 'United States of America'.
+                                <br>
+                                <br>
+                                ?state places:in ?country.
+                                <br>
+                                ?city places:in ?state.
+                                <br>
+                                <br>
+                                ?country a places:Country.
+                                <br>
+                                ?state a places:State.
+                                <br>
+                                ?city a places:City.
+                                <br>
+                                <br>
+                                ?state rdfs:label ?stateName.
+                            </blockquote>
+                            }
+                            <br>
+                            <br>
+                            group by ?stateName 
+                            <br>
+                            order by ?stateName desc(?cities)
+                            <br>
+                            limit 10
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <br>
+            <br>
+            
+            
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'sqltosparql'; // required: replace example with your forum shortname
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+            <br>
+            <br>
+            <div class=footer>
+                Last updated November 25th, 2012 by <a href="http://zettlemoyer.com">Ron Michael Zettlemoyer</a>.
+                <br>
+                SQL To SPARQL Reference is sponsored by <a href="http://fynydd.com">Fynydd</a>.
+            </div>
+
+
+        </div>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/main.js"></script>
+
+        <script>
+            var _gaq=[['_setAccount','UA-12888942-6'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+    </body>
+</html>
